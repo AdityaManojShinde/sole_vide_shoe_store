@@ -19,4 +19,4 @@ A modern, responsive e-commerce landing page for an online shoe store built with
 
 ## Screenshot
 
-![SOLEVIBE Screenshot](./screenshot/screenshot.png)
+![SOLEVIBE Screenshot](./screenshot/image.png)
