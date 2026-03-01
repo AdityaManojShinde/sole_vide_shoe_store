@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart — SoleVibe</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#0f0f0f] text-white overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav id="navbar" class="sticky top-0 z-50 nav-blur border-b border-white/10 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 lg:h-20">
+                <a href="index.html" class="flex items-center gap-2">
+                    <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-shoe-prints text-white text-lg"></i>
+                    </div>
+                    <span class="text-2xl font-black tracking-tight">Sole<span class="gradient-text">Vibe</span></span>
+                </a>
+                <div class="hidden lg:flex items-center gap-8">
+                    <a href="index.html" class="text-sm font-medium text-white/80 hover:text-orange-400 transition-colors">Home</a>
+                    <a href="index.html#products" class="text-sm font-medium text-white/80 hover:text-orange-400 transition-colors">Shop</a>
+                    <a href="index.html#categories" class="text-sm font-medium text-white/80 hover:text-orange-400 transition-colors">Categories</a>
+                    <a href="index.html#deals" class="text-sm font-medium text-white/80 hover:text-orange-400 transition-colors">Deals</a>
+                    <a href="index.html#reviews" class="text-sm font-medium text-white/80 hover:text-orange-400 transition-colors">Reviews</a>
+                    <a href="index.html#contact" class="text-sm font-medium text-white/80 hover:text-orange-400 transition-colors">Contact</a>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button class="relative p-2 hover:text-orange-400 transition-colors" id="wishlistBtn">
+                        <i class="far fa-heart text-xl"></i>
+                        <span class="absolute -top-1 -right-1 w-5 h-5 bg-orange-500 rounded-full text-xs flex items-center justify-center font-bold" id="wishlistCount">0</span>
+                    </button>
+                    <a href="cart.html" class="relative p-2 text-orange-400">
+                        <i class="fas fa-shopping-bag text-xl"></i>
+                        <span class="absolute -top-1 -right-1 w-5 h-5 bg-orange-500 rounded-full text-xs flex items-center justify-center font-bold" id="cartCount">0</span>
+                    </a>
+                    <button class="lg:hidden p-2" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars text-xl" id="menuIcon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobileMenu" class="lg:hidden hidden bg-[#1a1a2e] border-t border-white/10">
+            <div class="px-6 py-6 space-y-4">
+                <a href="index.html" class="block text-lg font-medium text-white/80 hover:text-orange-400 transition-colors" onclick="toggleMobileMenu()">Home</a>
+                <a href="index.html#products" class="block text-lg font-medium text-white/80 hover:text-orange-400 transition-colors" onclick="toggleMobileMenu()">Shop</a>
+                <a href="index.html#categories" class="block text-lg font-medium text-white/80 hover:text-orange-400 transition-colors" onclick="toggleMobileMenu()">Categories</a>
+                <a href="cart.html" class="block text-lg font-medium text-orange-400 transition-colors" onclick="toggleMobileMenu()">Cart</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <nav class="breadcrumb flex items-center gap-2 text-sm text-white/40">
+            <a href="index.html" class="hover:text-orange-400"><i class="fas fa-home"></i> Home</a>
+            <span>/</span>
+            <span class="text-white/70">Shopping Cart</span>
+        </nav>
+    </div>
+
+    <!-- Progress Steps -->
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+        <div class="flex items-center">
+            <div class="flex flex-col items-center gap-2">
+                <div class="step-circle active"><i class="fas fa-shopping-bag text-sm"></i></div>
+                <span class="text-xs font-semibold text-orange-400">Cart</span>
+            </div>
+            <div class="step-line flex-1 mx-3"></div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="step-circle inactive"><i class="fas fa-credit-card text-sm"></i></div>
+                <span class="text-xs font-medium text-white/40">Payment</span>
+            </div>
+            <div class="step-line flex-1 mx-3"></div>
+            <div class="flex flex-col items-center gap-2">
+                <div class="step-circle inactive"><i class="fas fa-check text-sm"></i></div>
+                <span class="text-xs font-medium text-white/40">Confirmation</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Content -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        <h1 class="text-3xl lg:text-4xl font-black mb-8">Shopping <span class="gradient-text">Cart</span></h1>
+
+        <!-- Empty Cart State -->
+        <div id="emptyCartState" class="hidden">
+            <div class="flex flex-col items-center justify-center py-20 text-center">
+                <div class="w-32 h-32 bg-white/5 rounded-full flex items-center justify-center mb-6">
+                    <i class="fas fa-shopping-bag text-5xl text-white/20"></i>
+                </div>
+                <h2 class="text-2xl font-bold mb-2">Your cart is empty</h2>
+                <p class="text-white/50 mb-8 max-w-md">Looks like you haven't added anything to your cart yet. Browse our collection and find something you love!</p>
+                <a href="index.html#products" class="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 inline-flex items-center gap-2">
+                    <i class="fas fa-shopping-bag"></i> Start Shopping
+                </a>
+            </div>
+        </div>
+
+        <!-- Cart With Items -->
+        <div id="cartContent" class="hidden">
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Cart Items Column -->
+                <div class="lg:col-span-2 space-y-4">
+                    <!-- Cart Header -->
+                    <div class="hidden md:grid grid-cols-12 gap-4 text-sm text-white/40 font-semibold px-6 pb-2 border-b border-white/10">
+                        <div class="col-span-6">Product</div>
+                        <div class="col-span-2 text-center">Price</div>
+                        <div class="col-span-2 text-center">Quantity</div>
+                        <div class="col-span-2 text-right">Total</div>
+                    </div>
+
+                    <!-- Cart Items -->
+                    <div id="cartItemsList"></div>
+
+                    <!-- Cart Actions -->
+                    <div class="flex flex-col sm:flex-row gap-3 pt-4 border-t border-white/10 mt-4">
+                        <a href="index.html#products" class="flex items-center gap-2 text-orange-400 font-semibold hover:text-orange-300 transition-colors">
+                            <i class="fas fa-arrow-left"></i> Continue Shopping
+                        </a>
+                        <button onclick="clearCart()" class="sm:ml-auto flex items-center gap-2 text-red-400 font-semibold hover:text-red-300 transition-colors">
+                            <i class="fas fa-trash-alt"></i> Clear Cart
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Order Summary Column -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white/5 border border-white/10 rounded-3xl p-6 sticky top-28">
+                        <h3 class="text-xl font-bold mb-6">Order Summary</h3>
+
+                        <!-- Promo Code -->
+                        <div class="mb-6">
+                            <label class="text-sm text-white/50 mb-2 block">Promo Code</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="promoInput" placeholder="Enter code" class="promo-input flex-1 text-sm">
+                                <button onclick="applyPromo()" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl text-sm font-bold transition-colors">Apply</button>
+                            </div>
+                            <p id="promoMsg" class="text-xs mt-2 hidden"></p>
+                        </div>
+
+                        <!-- Summary Lines -->
+                        <div class="space-y-3 pb-4 border-b border-white/10">
+                            <div class="flex justify-between text-white/60">
+                                <span>Subtotal</span>
+                                <span class="font-semibold text-white" id="summarySubtotal">$0.00</span>
+                            </div>
+                            <div class="flex justify-between text-white/60">
+                                <span>Shipping</span>
+                                <span class="font-semibold text-white" id="summaryShipping">Free</span>
+                            </div>
+                            <div class="flex justify-between text-white/60" id="discountRow" style="display:none">
+                                <span>Discount</span>
+                                <span class="font-semibold text-green-400" id="summaryDiscount">-$0.00</span>
+                            </div>
+                            <div class="flex justify-between text-white/60">
+                                <span>Tax (Est.)</span>
+                                <span class="font-semibold text-white" id="summaryTax">$0.00</span>
+                            </div>
+                        </div>
+
+                        <!-- Total -->
+                        <div class="flex justify-between pt-4 mb-6">
+                            <span class="text-lg font-bold">Total</span>
+                            <span class="text-2xl font-black text-orange-400" id="summaryTotal">$0.00</span>
+                        </div>
+
+                        <!-- Checkout Button -->
+                        <button onclick="handleCheckout()" class="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2 pulse-glow mb-4">
+                            <i class="fas fa-lock"></i> Proceed to Checkout
+                        </button>
+
+                        <!-- PayPal / Alt -->
+                        <button class="w-full bg-[#FFC439] hover:bg-[#f0b830] text-[#003087] py-3 rounded-full font-bold transition-all duration-300 flex items-center justify-center gap-2 mb-4">
+                            <i class="fab fa-paypal"></i> Pay with PayPal
+                        </button>
+
+                        <!-- Trust -->
+                        <div class="flex items-center justify-center gap-4 pt-2">
+                            <div class="flex items-center gap-1 text-white/40 text-xs">
+                                <i class="fas fa-shield-halved text-green-400"></i> Secure
+                            </div>
+                            <div class="flex items-center gap-1 text-white/40 text-xs">
+                                <i class="fas fa-lock text-green-400"></i> Encrypted
+                            </div>
+                            <div class="flex items-center gap-1 text-white/40 text-xs">
+                                <i class="fas fa-rotate-left text-green-400"></i> 30-Day Returns
+                            </div>
+                        </div>
+
+                        <!-- Payment Methods -->
+                        <div class="flex justify-center gap-3 mt-4 pt-4 border-t border-white/10">
+                            <img src="https://img.icons8.com/color/48/visa.png" alt="Visa" class="h-7 opacity-50">
+                            <img src="https://img.icons8.com/color/48/mastercard.png" alt="Mastercard" class="h-7 opacity-50">
+                            <img src="https://img.icons8.com/color/48/paypal.png" alt="PayPal" class="h-7 opacity-50">
+                            <img src="https://img.icons8.com/color/48/amex.png" alt="Amex" class="h-7 opacity-50">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- You May Also Like -->
+            <div class="mt-20">
+                <h2 class="text-3xl font-black mb-8">You May Also <span class="gradient-text">Like</span></h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="suggestedProducts"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 bg-[#0a0a0a] pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+                <div>
+                    <a href="index.html" class="flex items-center gap-2 mb-4">
+                        <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-shoe-prints text-white text-lg"></i>
+                        </div>
+                        <span class="text-2xl font-black tracking-tight">Sole<span class="gradient-text">Vibe</span></span>
+                    </a>
+                    <p class="text-white/50 text-sm leading-relaxed">Premium footwear for every occasion. Step into style, step into comfort.</p>
+                    <div class="flex gap-3 mt-6">
+                        <a href="#" class="w-10 h-10 bg-white/10 hover:bg-orange-500 rounded-full flex items-center justify-center transition-colors"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 bg-white/10 hover:bg-orange-500 rounded-full flex items-center justify-center transition-colors"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 bg-white/10 hover:bg-orange-500 rounded-full flex items-center justify-center transition-colors"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="w-10 h-10 bg-white/10 hover:bg-orange-500 rounded-full flex items-center justify-center transition-colors"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-3 text-sm text-white/50">
+                        <li><a href="index.html" class="hover:text-orange-400 transition-colors">Home</a></li>
+                        <li><a href="index.html#products" class="hover:text-orange-400 transition-colors">Shop</a></li>
+                        <li><a href="index.html#deals" class="hover:text-orange-400 transition-colors">Sale</a></li>
+                        <li><a href="cart.html" class="hover:text-orange-400 transition-colors">Cart</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Help</h4>
+                    <ul class="space-y-3 text-sm text-white/50">
+                        <li><a href="#" class="hover:text-orange-400 transition-colors">Shipping & Delivery</a></li>
+                        <li><a href="#" class="hover:text-orange-400 transition-colors">Returns & Exchanges</a></li>
+                        <li><a href="#" class="hover:text-orange-400 transition-colors">Size Guide</a></li>
+                        <li><a href="#" class="hover:text-orange-400 transition-colors">FAQs</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Contact Us</h4>
+                    <ul class="space-y-3 text-sm text-white/50">
+                        <li class="flex items-center gap-2"><i class="fas fa-map-marker-alt text-orange-400"></i> 123 Shoe St, NYC 10001</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-phone text-orange-400"></i> +1 (555) 123-4567</li>
+                        <li class="flex items-center gap-2"><i class="fas fa-envelope text-orange-400"></i> hello@solevibe.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/10 pt-8 text-center text-white/30 text-sm">
+                <p>&copy; 2025 SoleVibe. All rights reserved. Made with <i class="fas fa-heart text-orange-400"></i> for sneaker lovers.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-green-500 text-white px-6 py-3 rounded-xl font-semibold shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMsg">Item added to cart!</span>
+    </div>
+
+    <!-- Back to Top -->
+    <button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" class="fixed bottom-6 left-6 w-12 h-12 bg-orange-500 hover:bg-orange-600 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 opacity-0 translate-y-4 z-40">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="script.js"></script>
+    <script>
+        let promoApplied = false;
+        let promoDiscount = 0;
+
+        function renderCartPage() {
+            const cart = getCart();
+            const emptyState = document.getElementById('emptyCartState');
+            const cartContent = document.getElementById('cartContent');
+
+            if (cart.length === 0) {
+                emptyState.classList.remove('hidden');
+                cartContent.classList.add('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            cartContent.classList.remove('hidden');
+
+            // Render items
+            const itemsList = document.getElementById('cartItemsList');
+            itemsList.innerHTML = cart.map(item => {
+                const product = products.find(p => p.id === item.id);
+                return `
+                <div class="cart-item-row bg-white/5 border border-white/10 rounded-2xl p-4 md:p-6">
+                    <div class="grid grid-cols-12 gap-4 items-center">
+                        <!-- Product Info -->
+                        <div class="col-span-12 md:col-span-6">
+                            <div class="flex gap-4">
+                                <a href="product.html?id=${item.id}" class="shrink-0">
+                                    <img src="${item.image}" alt="${item.name}" class="w-24 h-24 object-cover rounded-xl hover:opacity-80 transition-opacity">
+                                </a>
+                                <div class="flex flex-col justify-center">
+                                    <a href="product.html?id=${item.id}" class="font-bold text-lg hover:text-orange-400 transition-colors">${item.name}</a>
+                                    <div class="flex items-center gap-3 mt-1 text-sm text-white/50">
+                                        <span class="flex items-center gap-1">
+                                            <span class="w-3 h-3 rounded-full inline-block" style="background:${item.color}"></span>
+                                            ${item.color}
+                                        </span>
+                                        <span>|</span>
+                                        <span>Size: ${item.size}</span>
+                                    </div>
+                                    ${product && product.oldPrice ? `<span class="text-xs text-green-400 mt-1"><i class="fas fa-tag"></i> Save $${product.oldPrice - product.price}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="col-span-4 md:col-span-2 text-center">
+                            <span class="md:hidden text-xs text-white/40 block mb-1">Price</span>
+                            <span class="font-bold text-orange-400">$${item.price}</span>
+                            ${product && product.oldPrice ? `<span class="block text-xs text-white/40 line-through">$${product.oldPrice}</span>` : ''}
+                        </div>
+
+                        <!-- Quantity -->
+                        <div class="col-span-4 md:col-span-2 flex justify-center">
+                            <div class="flex items-center gap-2">
+                                <button onclick="changeQty(${item.id}, -1)" class="w-9 h-9 bg-white/10 border border-white/20 rounded-lg flex items-center justify-center hover:bg-white/20 transition-colors text-sm font-bold">-</button>
+                                <span class="w-8 text-center font-bold">${item.qty}</span>
+                                <button onclick="changeQty(${item.id}, 1)" class="w-9 h-9 bg-white/10 border border-white/20 rounded-lg flex items-center justify-center hover:bg-white/20 transition-colors text-sm font-bold">+</button>
+                            </div>
+                        </div>
+
+                        <!-- Total + Remove -->
+                        <div class="col-span-4 md:col-span-2 text-right flex items-center justify-end gap-3">
+                            <div>
+                                <span class="md:hidden text-xs text-white/40 block mb-1">Total</span>
+                                <span class="font-bold text-lg">$${(item.price * item.qty).toFixed(2)}</span>
+                            </div>
+                            <button onclick="removeFromCart(${item.id})" class="w-9 h-9 bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 rounded-lg flex items-center justify-center text-red-400 hover:text-red-300 transition-colors">
+                                <i class="fas fa-trash-alt text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+
+            // Update summary
+            updateSummary();
+
+            // Render suggested products
+            renderSuggested(cart);
+        }
+
+        function updateSummary() {
+            const cart = getCart();
+            const subtotal = cart.reduce((sum, c) => sum + c.price * c.qty, 0);
+            const shipping = subtotal >= 99 ? 0 : 9.99;
+            const discount = promoApplied ? subtotal * promoDiscount : 0;
+            const taxable = subtotal - discount + shipping;
+            const tax = taxable * 0.08;
+            const total = taxable + tax;
+
+            document.getElementById('summarySubtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('summaryShipping').textContent = shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`;
+            document.getElementById('summaryTax').textContent = `$${tax.toFixed(2)}`;
+            document.getElementById('summaryTotal').textContent = `$${total.toFixed(2)}`;
+
+            const discountRow = document.getElementById('discountRow');
+            if (promoApplied) {
+                discountRow.style.display = 'flex';
+                document.getElementById('summaryDiscount').textContent = `-$${discount.toFixed(2)}`;
+            } else {
+                discountRow.style.display = 'none';
+            }
+        }
+
+        function applyPromo() {
+            const code = document.getElementById('promoInput').value.trim().toUpperCase();
+            const msg = document.getElementById('promoMsg');
+
+            const promoCodes = {
+                'SOLE15': 0.15,
+                'SUMMER20': 0.20,
+                'WELCOME10': 0.10,
+                'VIBE25': 0.25
+            };
+
+            if (promoCodes[code]) {
+                promoApplied = true;
+                promoDiscount = promoCodes[code];
+                msg.textContent = `✅ Code "${code}" applied! ${promoDiscount * 100}% off`;
+                msg.className = 'text-xs mt-2 text-green-400';
+                msg.classList.remove('hidden');
+                showToast(`🎉 Promo code applied: ${promoDiscount * 100}% off!`);
+                updateSummary();
+            } else if (code === '') {
+                msg.textContent = '⚠️ Please enter a promo code';
+                msg.className = 'text-xs mt-2 text-yellow-400';
+                msg.classList.remove('hidden');
+            } else {
+                msg.textContent = '❌ Invalid promo code. Try SOLE15 or WELCOME10';
+                msg.className = 'text-xs mt-2 text-red-400';
+                msg.classList.remove('hidden');
+            }
+        }
+
+        function clearCart() {
+            if (confirm('Are you sure you want to clear your cart?')) {
+                saveCart([]);
+                updateCartCount();
+                renderCartPage();
+                showToast('Cart cleared');
+            }
+        }
+
+        function handleCheckout() {
+            const cart = getCart();
+            if (cart.length === 0) {
+                showToast('Your cart is empty!');
+                return;
+            }
+            showToast('🎉 Proceeding to checkout...');
+            // In a real app, this would redirect to a checkout page
+        }
+
+        function renderSuggested(cart) {
+            const cartIds = cart.map(c => c.id);
+            const suggested = products.filter(p => !cartIds.includes(p.id)).slice(0, 4);
+            const grid = document.getElementById('suggestedProducts');
+            if (!grid) return;
+
+            grid.innerHTML = suggested.map(p => `
+                <div class="card-hover bg-white/5 border border-white/10 rounded-3xl overflow-hidden group">
+                    <div class="relative overflow-hidden">
+                        <a href="product.html?id=${p.id}">
+                            <img src="${p.image}" alt="${p.name}" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500">
+                        </a>
+                        ${p.tag ? `<span class="absolute top-4 left-4 ${getTagColor(p.tag)} text-white text-xs font-bold px-3 py-1 rounded-full">${p.tag}</span>` : ''}
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-center gap-1 text-yellow-400 text-sm mb-2">
+                            <i class="fas fa-star"></i>
+                            <span class="text-white/60">${p.rating}</span>
+                        </div>
+                        <a href="product.html?id=${p.id}" class="font-bold text-lg hover:text-orange-400 transition-colors block">${p.name}</a>
+                        <div class="flex items-center gap-2 mt-2">
+                            <span class="text-xl font-black text-orange-400">$${p.price}</span>
+                            ${p.oldPrice ? `<span class="text-white/40 line-through text-sm">$${p.oldPrice}</span>` : ''}
+                        </div>
+                        <button onclick="addToCart(${p.id}); renderCartPage();" class="mt-4 w-full bg-white/10 hover:bg-orange-500 border border-white/20 hover:border-orange-500 text-white py-3 rounded-full font-semibold transition-all duration-300 flex items-center justify-center gap-2">
+                            <i class="fas fa-shopping-bag text-sm"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', renderCartPage);
+    </script>
+</body>
+</html>
